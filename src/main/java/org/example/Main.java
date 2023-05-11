@@ -42,12 +42,7 @@ public class Main {
     }
 
     private static LibraryManager createLibraryManager() {
-        Gson gson = new GsonBuilder()
-                .registerTypeAdapter(LibraryItem.class, new LibraryItemTypeAdapter())
-                .create();;
-        return new LibraryManager() {
-
-        };
+        return new LibraryManager(){};
     }
 
     private static void runMenu(LibraryManager libraryManager, JsonArray libraryItems, Scanner scanner) {

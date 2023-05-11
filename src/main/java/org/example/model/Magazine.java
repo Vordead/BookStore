@@ -4,9 +4,10 @@ public class Magazine extends LibraryItem {
     private int issueNumber;
 
     public Magazine(String title, String author, int issueNumber) {
-        super(title, author);
+        super("magazine", title, author);
         this.issueNumber = issueNumber;
     }
+
 
     public int getIssueNumber() {
         return issueNumber;

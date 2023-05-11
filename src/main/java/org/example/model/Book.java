@@ -1,12 +1,11 @@
 package org.example.model;
 
-class Book extends LibraryItem {
+public class Book extends LibraryItem {
     private int publicationYear;
     private int isbn;
 
-
     public Book(String title, String author, int publicationYear, int isbn) {
-        super(title, author);
+        super("book", title, author);
         this.publicationYear = publicationYear;
         this.isbn = isbn;
     }
@@ -29,11 +28,13 @@ class Book extends LibraryItem {
         this.isbn = isbn;
     }
 
+
     @Override
     public void displayItemDetails() {
         System.out.println("Book Details:");
         System.out.println("Title: " + getTitle());
         System.out.println("Author: " + getAuthor());
-        System.out.println("Publication Year: " + getPublicationYear());
+        System.out.println("ISBN: " + getIsbn());
+        System.out.println("Publication Year "+getPublicationYear());
     }
 }

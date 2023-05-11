@@ -8,5 +8,3 @@ public interface GsonJSONFileOperations {
     JsonArray readJSONFile(String fileName) throws IOException;
     void writeJSONFile(String fileName, JsonArray jsonArray) throws IOException;
 }
-
-

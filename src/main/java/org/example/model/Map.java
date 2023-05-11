@@ -1,12 +1,13 @@
 package org.example.model;
 
-class Map extends LibraryItem {
+public class Map extends LibraryItem {
     private String location;
 
-    public Map(String title, String author, String location) {
-        super(title, author);
+    public Map(String title, String author,String location) {
+        super("map", title, author);
         this.location = location;
     }
+
 
     public String getLocation() {
         return location;

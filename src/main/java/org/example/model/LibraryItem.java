@@ -1,10 +1,13 @@
 package org.example.model;
 
 public abstract class LibraryItem {
+
+    private String type;
     private String title;
     private String author;
 
-    public LibraryItem(String title, String author) {
+    public LibraryItem(String type,String title, String author) {
+        this.type = type;
         this.title = title;
         this.author = author;
     }
@@ -24,6 +27,8 @@ public abstract class LibraryItem {
     public void setAuthor(String author) {
         this.author = author;
     }
+
+    public String getLibraryItemType(){return this.type;}
 
 
     public abstract void displayItemDetails();

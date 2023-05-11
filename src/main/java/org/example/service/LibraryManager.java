@@ -12,6 +12,7 @@ import org.example.model.LibraryItem;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public abstract class LibraryManager {
     private List<LibraryItem> libraryItems;
@@ -41,9 +42,28 @@ public abstract class LibraryManager {
         libraryItems.add(item);
     };
 
-    public void updateItem(LibraryItem item){
 
-    };
+    public void updateItem(LibraryItem updatedItem) {
+        libraryItems = libraryItems.stream()
+                .map(item -> {
+                    if (item.equals(updatedItem)) {
+                        return updatedItem;
+                    } else {
+                        return item;
+                    }
+                })
+                .collect(Collectors.toList());
+    }
+
+    public void searchItem(LibraryItem libraryItem) {
+        libraryItems.stream()
+                .filter(item -> item.getTitle().equals(libraryItem.getTitle()) && item.getAuthor().equals(libraryItem.getAuthor()))
+                .findFirst()
+                .ifPresent(item -> {
+                    int index = libraryItems.indexOf(item);
+                    libraryItems.set(index, libraryItem);
+                });
+    }
 
     public void deleteItem(LibraryItem item){
 

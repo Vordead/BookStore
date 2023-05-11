@@ -12,8 +12,8 @@ import java.util.Scanner;
 
 public class Main {
     static boolean isJsonSelected = false;
+    static LibraryManager libraryManager = createLibraryManager();
     public static void main(String[] args) {
-        LibraryManager libraryManager = createLibraryManager();
         Scanner scanner = new Scanner(System.in);
         System.out.println("Welcome to the Library Management System!");
 
@@ -76,10 +76,11 @@ public class Main {
                     libraryManager.addItem(getLibraryItemFromUserInput());
                     break;
                 case 3:
-                    // TODO: Implement logic to update an item
+                    libraryManager.updateItem(updateUserInput());
                     break;
                 case 4:
                     // TODO: Implement logic to delete an item
+//                    libraryManager.deleteItem();
                     break;
                 case 5:
                     // TODO: Implement logic to search for an item
@@ -139,4 +140,60 @@ public class Main {
         }
         return null;
     }
+
+    public static LibraryItem updateUserInput() {
+        Scanner scanner = new Scanner(System.in);
+
+        // Ask user to enter author and title
+        System.out.print("Enter author: ");
+        String author = scanner.nextLine();
+
+        System.out.print("Enter title: ");
+        String title = scanner.nextLine();
+
+        // Search for the library item
+        LibraryItem foundItem = null;
+        for (LibraryItem item : libraryManager.getLibraryItems()) {
+            if (item.getAuthor().equals(author) && item.getTitle().equals(title)) {
+                foundItem = item;
+                break;
+            }
+        }
+
+        // If item not found, print message and return null
+        if (foundItem == null) {
+            System.out.println("No item found with the given author and title.");
+            return null;
+        }
+
+        // Get the type of the item
+        String itemType = foundItem.getLibraryItemType();
+
+        // Based on the item type, ask the user to enter the data to update
+        switch (itemType) {
+            case "book" -> {
+                System.out.print("Enter new ISBN: ");
+                int isbn = scanner.nextInt();
+                ((Book) foundItem).setIsbn(isbn);
+                System.out.print("\nEnter new Publication Year: ");
+                int publicationYear = scanner.nextInt();
+                ((Book) foundItem).setPublicationYear(publicationYear);
+            }
+            case "magazine" -> {
+                System.out.print("Enter new issue number: ");
+                int issueNumber = scanner.nextInt();
+                ((Magazine) foundItem).setIssueNumber(issueNumber);
+            }
+            case "map" -> {
+                System.out.print("Enter new location: ");
+                String location = scanner.nextLine();
+                ((Map) foundItem).setLocation(location);
+            }
+            default -> System.out.println("Unsupported item type.");
+        }
+
+        System.out.println("Item updated successfully.");
+        return foundItem;
+    }
+
 }

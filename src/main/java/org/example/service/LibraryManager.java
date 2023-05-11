@@ -16,9 +16,9 @@ public abstract class LibraryManager {
         libraryItems = new JsonArray();
     }
 
-    public void loadDataFromJsonFile() throws IOException {
-        this.libraryItems = fileOperations.readJSONFile("/Users/mohamadhamade/IdeaProjects/BookStore/src/main/java/org/example/data.json");
+    public JsonArray loadDataFromJsonFile(String fileName) throws IOException {
         System.out.println("Data loaded from JSON file successfully.");
+        return fileOperations.readJSONFile(fileName);
     }
 
     public abstract void addItem(LibraryItem item);
@@ -27,7 +27,7 @@ public abstract class LibraryManager {
 
     public abstract void deleteItem(LibraryItem item);
 
-    public abstract void displayItems();
+    public abstract void displayItems(JsonArray libraryItems);
 
     // Other methods and functionality
 }

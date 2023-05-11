@@ -1,12 +1,16 @@
 package org.example;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import org.example.file.GsonJSONFileOperationsImpl;
 import org.example.model.LibraryItem;
+import org.example.model.Magazine;
 import org.example.service.LibraryManager;
 
+import java.awt.print.Book;
 import java.io.IOException;
+import java.util.Map;
 import java.util.Scanner;
 
 public class Main {
@@ -29,7 +33,12 @@ public class Main {
             }
 
             @Override
-            public void displayItems() {
+            public void displayItems(JsonArray libraryItems) {
+                if (libraryItems.size() == 0) {
+                    System.out.println("No items found in the library.");
+                    return;
+                }
+                System.out.println(libraryItems);
             }
         };
 
@@ -42,8 +51,8 @@ public class Main {
 
         if (choice.equalsIgnoreCase("y")) {
             try {
-                libraryManager.loadDataFromJsonFile();
-                libraryManager.displayItems();
+                JsonArray libraryItems = libraryManager.loadDataFromJsonFile("/Users/mohamadhamade/IdeaProjects/BookStore/src/main/java/org/example/data.json");
+                libraryManager.displayItems(libraryItems);
             } catch (IOException e) {
                 System.out.println("Failed to load data from the JSON file: " + e.getMessage());
             }

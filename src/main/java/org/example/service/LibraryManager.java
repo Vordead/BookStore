@@ -4,6 +4,7 @@ package org.example.service;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
 import org.example.file.GsonJSONFileOperationsImpl;
 import org.example.model.LibraryItem;
@@ -76,6 +77,14 @@ public abstract class LibraryManager {
                 .fromJson(jsonArray, new TypeToken<List<LibraryItem>>() {}.getType());
     }
 
+    public JsonArray convertLibraryItemsToJsonArray() {
+        JsonArray jsonArray = new JsonArray();
+        for (LibraryItem item : libraryItems) {
+            JsonElement jsonElement = gson.toJsonTree(item);
+            jsonArray.add(jsonElement);
+        }
+        return jsonArray;
+    }
 
     protected void setLibraryItems(List<LibraryItem> items) {
         libraryItems = items;

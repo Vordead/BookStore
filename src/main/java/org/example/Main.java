@@ -1,12 +1,11 @@
 package org.example;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
+import org.example.model.Book;
 import org.example.model.LibraryItem;
-import org.example.service.LibraryItemTypeAdapter;
+import org.example.model.Magazine;
+import org.example.model.Map;
 import org.example.service.LibraryManager;
-import org.example.model.*;
 
 import java.io.IOException;
 import java.util.Scanner;
@@ -45,7 +44,7 @@ public class Main {
         return new LibraryManager(){};
     }
 
-    private static void runMenu(LibraryManager libraryManager, JsonArray libraryItems, Scanner scanner) {
+    private static void runMenu(LibraryManager libraryManager, JsonArray libraryItems, Scanner scanner) throws IOException {
         System.out.println("\nMenu Options:");
         System.out.println("1. Display Items");
         System.out.println("2. Add Item");
@@ -65,6 +64,7 @@ public class Main {
                     System.out.println("Save Changes? (y/n)");
                     if (scanner.next().equalsIgnoreCase("y")) {
                         saveChanges(libraryManager);
+                        libraryManager.getFileOperations().writeJSONFile("/Users/mohamadhamade/IdeaProjects/BookStore/src/main/java/org/example/data.json",libraryManager.convertLibraryItemsToJsonArray());
                     } else {
                         System.out.println("Exiting without saving...");
                         break;
@@ -110,21 +110,27 @@ public class Main {
         int type = scanner.nextInt();
 
         switch (type) {
-            case 1:
+            case 1 -> {
                 System.out.println("You have Selected a Book!");
                 System.out.print("Enter ISBN (Integer): ");
                 int isbn = scanner.nextInt();
                 System.out.print("Enter Publication Year: ");
                 int publicationYear = scanner.nextInt();
                 return new Book(title, author, publicationYear, isbn);
-            case 2:
-                // TODO: Implement logic for Magazine
-                break;
-            case 3:
-                // TODO: Implement logic for Map
-                break;
-            default:
-                System.out.println("Invalid item type.");
+            }
+            case 2 -> {
+                System.out.println("You have Selected a Magazine");
+                System.out.print("Enter IssueNumber: ");
+                int issueNumber = scanner.nextInt();
+                return new Magazine(title, author, issueNumber);
+            }
+            case 3 -> {
+                System.out.println("You have Selected a Map");
+                System.out.print("Enter location: ");
+                String location = scanner.next();
+                return new Map(title, author, location);
+            }
+            default -> System.out.println("Invalid item type.");
         }
         return null;
     }

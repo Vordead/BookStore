@@ -1,0 +1,21 @@
+[
+  {
+    "type": "book",
+    "title": "The Great Gatsby",
+    "author": "F. Scott Fitzgerald",
+    "publicationYear": 1925,
+    "isbn": "9780743273565"
+  },
+  {
+    "type": "magazine",
+    "title": "National Geographic",
+    "author": "Various Authors",
+    "issueNumber": 256
+  },
+  {
+    "type": "map",
+    "title": "World Map",
+    "author": "Cartographer",
+    "location": "Global"
+  }
+]

@@ -32,6 +32,11 @@ public abstract class LibraryManager {
         return fileOperations.readJSONFile(fileName);
     }
 
+    public void writeDataToJsonFile(String fileName) throws IOException {
+        fileOperations.writeJSONFile(fileName,convertLibraryItemsToJsonArray());
+        System.out.println("Data loaded from JSON file successfully.");
+    }
+
     public void addItem(LibraryItem item){
         libraryItems.add(item);
     };

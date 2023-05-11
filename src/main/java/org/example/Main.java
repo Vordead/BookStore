@@ -11,8 +11,8 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public class Main {
+    static boolean isJsonSelected = false;
     public static void main(String[] args) {
-        boolean isSaveEnabled = false;
         LibraryManager libraryManager = createLibraryManager();
         Scanner scanner = new Scanner(System.in);
         System.out.println("Welcome to the Library Management System!");
@@ -25,6 +25,7 @@ public class Main {
 
         if (choice == 1) {
             try {
+                isJsonSelected = true;
                 JsonArray libraryItems = libraryManager.loadDataFromJsonFile("src/main/java/org/example/data.json");
                 libraryManager.setLibraryItemsFromJsonArray(libraryItems);
                 runMenu(libraryManager, libraryItems, scanner);
@@ -64,7 +65,6 @@ public class Main {
                     System.out.println("Save Changes? (y/n)");
                     if (scanner.next().equalsIgnoreCase("y")) {
                         saveChanges(libraryManager);
-                        libraryManager.getFileOperations().writeJSONFile("/Users/mohamadhamade/IdeaProjects/BookStore/src/main/java/org/example/data.json",libraryManager.convertLibraryItemsToJsonArray());
                     } else {
                         System.out.println("Exiting without saving...");
                         break;
@@ -90,8 +90,13 @@ public class Main {
         } while (menuChoice != 0);
     }
 
-    private static void saveChanges(LibraryManager libraryManager) {
-        // TODO: Implement the logic to save changes to the JSON file
+    private static void saveChanges(LibraryManager libraryManager) throws IOException {
+        if(isJsonSelected) {
+            libraryManager.writeDataToJsonFile("src/main/java/org/example/data.json");
+        }
+        else{
+
+        }
     }
 
     private static LibraryItem getLibraryItemFromUserInput() {

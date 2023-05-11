@@ -11,11 +11,13 @@ import org.example.model.LibraryItem;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public abstract class LibraryManager {
     private List<LibraryItem> libraryItems;
+    private List<LibraryItem> searchResults;
     private final GsonJSONFileOperationsImpl fileOperations;
     private final Gson gson;
 
@@ -55,14 +57,33 @@ public abstract class LibraryManager {
                 .collect(Collectors.toList());
     }
 
-    public void searchItem(LibraryItem libraryItem) {
-        libraryItems.stream()
-                .filter(item -> item.getTitle().equals(libraryItem.getTitle()) && item.getAuthor().equals(libraryItem.getAuthor()))
-                .findFirst()
-                .ifPresent(item -> {
-                    int index = libraryItems.indexOf(item);
-                    libraryItems.set(index, libraryItem);
-                });
+    public List<LibraryItem> searchByTitle(String title) {
+        List<LibraryItem> results = libraryItems.stream()
+                .filter(item -> item.getTitle().toLowerCase().contains(title.toLowerCase()))
+                .sorted(Comparator.comparingInt(item -> calculateTitleMatchLevel(item.getTitle(), title)))
+                .collect(Collectors.toList());
+
+        if (results.isEmpty()) {
+            System.out.println("No items found with the given title.");
+        }
+
+        return results;
+    }
+
+    private int calculateTitleMatchLevel(String itemTitle, String searchTitle) {
+        int matchLevel = 0;
+
+        // Check for exact match
+        if (itemTitle.equalsIgnoreCase(searchTitle)) {
+            return matchLevel;
+        }
+
+        // Check for partial match
+        if (itemTitle.toLowerCase().startsWith(searchTitle.toLowerCase())) {
+            matchLevel++;
+        }
+
+        return matchLevel;
     }
 
     public void deleteItem(LibraryItem item){
@@ -77,17 +98,18 @@ public abstract class LibraryManager {
         return fileOperations;
     }
 
-    public void displayItems() {
-        if (libraryItems.size() == 0) {
-            System.out.println("No items found in the library.");
-        } else {
-            System.out.println("Library Items:");
-            for (LibraryItem item : libraryItems) {
-                System.out.println("------------------------------");
-                item.displayItemDetails();
-                System.out.println("------------------------------");
+    public void displayItems(boolean isSearching) {
+        List<LibraryItem> currentItems = isSearching ? searchResults : libraryItems;
+            if (currentItems.size() == 0) {
+                System.out.println("No items found in the library.");
+            } else {
+                System.out.println("Library Items:");
+                for (LibraryItem item : currentItems) {
+                    System.out.println("------------------------------");
+                    item.displayItemDetails();
+                    System.out.println("------------------------------");
+                }
             }
-        }
     }
 
     public void fromJson(String json) {
@@ -111,9 +133,14 @@ public abstract class LibraryManager {
         return jsonArray;
     }
 
-    protected void setLibraryItems(List<LibraryItem> items) {
+    public void setLibraryItems(List<LibraryItem> items) {
         libraryItems = items;
     }
+
+    public void setSearchResults(List<LibraryItem> items){
+        this.searchResults = items;
+    }
+
 
     // Other methods and functionality
 }

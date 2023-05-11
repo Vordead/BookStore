@@ -8,6 +8,7 @@ import org.example.model.Map;
 import org.example.service.LibraryManager;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -70,20 +71,20 @@ public class Main {
                         break;
                     }
                 case 1:
-                    libraryManager.displayItems();
+                    libraryManager.displayItems(false);
                     break;
                 case 2:
                     libraryManager.addItem(getLibraryItemFromUserInput());
                     break;
                 case 3:
-                    libraryManager.updateItem(updateUserInput());
+                    libraryManager.updateItem(userItemInput(false));
                     break;
                 case 4:
-                    // TODO: Implement logic to delete an item
-//                    libraryManager.deleteItem();
+                    libraryManager.updateItem(userItemInput(true));
                     break;
                 case 5:
                     // TODO: Implement logic to search for an item
+                    searchInput();
                     break;
                 default:
                     System.out.println("Invalid choice.");
@@ -141,7 +142,7 @@ public class Main {
         return null;
     }
 
-    public static LibraryItem updateUserInput() {
+    public static LibraryItem userItemInput(boolean isDelete) {
         Scanner scanner = new Scanner(System.in);
 
         // Ask user to enter author and title
@@ -160,9 +161,15 @@ public class Main {
             }
         }
 
-        // If item not found, print message and return null
+        // If item not found, print message and return null (for delete) or foundItem (for update)
         if (foundItem == null) {
             System.out.println("No item found with the given author and title.");
+            return isDelete ? null : foundItem;
+        }
+
+        if (isDelete) {
+            libraryManager.getLibraryItems().remove(foundItem);
+            System.out.println("Item deleted successfully.");
             return null;
         }
 
@@ -175,9 +182,6 @@ public class Main {
                 System.out.print("Enter new ISBN: ");
                 int isbn = scanner.nextInt();
                 ((Book) foundItem).setIsbn(isbn);
-                System.out.print("\nEnter new Publication Year: ");
-                int publicationYear = scanner.nextInt();
-                ((Book) foundItem).setPublicationYear(publicationYear);
             }
             case "magazine" -> {
                 System.out.print("Enter new issue number: ");
@@ -196,4 +200,14 @@ public class Main {
         return foundItem;
     }
 
+    static private void searchInput(){
+        System.out.print("Enter Title: ");
+        Scanner scanner = new Scanner(System.in);
+        String title = scanner.nextLine();
+        List<LibraryItem> results =  libraryManager.searchByTitle(title);
+        if(!results.isEmpty()){
+            libraryManager.setSearchResults(results);
+            libraryManager.displayItems(true);
+        }
+    }
 }

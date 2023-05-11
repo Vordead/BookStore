@@ -41,8 +41,6 @@ public class Main {
                 System.out.println(libraryItems);
             }
         };
-
-        GsonJSONFileOperationsImpl fileOperations = new GsonJSONFileOperationsImpl();
         Scanner scanner = new Scanner(System.in);
         System.out.println("Welcome to the Library Management System!");
 
@@ -51,7 +49,7 @@ public class Main {
 
         if (choice.equalsIgnoreCase("y")) {
             try {
-                JsonArray libraryItems = libraryManager.loadDataFromJsonFile("/Users/mohamadhamade/IdeaProjects/BookStore/src/main/java/org/example/data.json");
+                JsonArray libraryItems = libraryManager.loadDataFromJsonFile("src/main/java/org/example/data.json");
                 libraryManager.displayItems(libraryItems);
             } catch (IOException e) {
                 System.out.println("Failed to load data from the JSON file: " + e.getMessage());

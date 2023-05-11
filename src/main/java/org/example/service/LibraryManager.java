@@ -9,7 +9,7 @@ import java.io.IOException;
 
 public abstract class LibraryManager {
     private JsonArray libraryItems;
-    private GsonJSONFileOperationsImpl fileOperations;
+    private final GsonJSONFileOperationsImpl fileOperations;
 
     public LibraryManager() {
         fileOperations = new GsonJSONFileOperationsImpl();

@@ -42,7 +42,7 @@ public class Main {
             try {
                 System.out.println("Connecting to MongoDB, please wait...");
                 isJsonSelected = false;
-                MongoDBImporter.importOrPostJSON("read",connectionString,databaseName,collectionName,jsonFilePath);
+                MongoDBImporter.importOrPostJSON("read",connectionString,databaseName,collectionName,libraryManager.convertLibraryItemsToJsonArray());
                 System.out.println(MongoDBImporter.jsonArray);
                 libraryManager.setLibraryItemsFromJsonArray(MongoDBImporter.jsonArray);
                 runMenu(libraryManager,MongoDBImporter.jsonArray,scanner);
@@ -108,7 +108,7 @@ public class Main {
             libraryManager.writeDataToJsonFile("src/main/java/org/example/data.json");
         }
         else{
-            MongoDBImporter.importOrPostJSON("import",connectionString,databaseName,collectionName,jsonFilePath);
+            MongoDBImporter.importOrPostJSON("import",connectionString,databaseName,collectionName,libraryManager.convertLibraryItemsToJsonArray());
         }
     }
 

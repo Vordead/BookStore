@@ -193,6 +193,9 @@ public class Main {
                 System.out.print("Enter new ISBN: ");
                 int isbn = scanner.nextInt();
                 ((Book) foundItem).setIsbn(isbn);
+                System.out.print("Enter new Publication Year : ");
+                int publicationYear = scanner.nextInt();
+                ((Book) foundItem).setPublicationYear(publicationYear);
             }
             case "magazine" -> {
                 System.out.print("Enter new issue number: ");

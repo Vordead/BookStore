@@ -1,10 +1,12 @@
 package org.example.model;
 
+import java.util.Objects;
+
 public abstract class LibraryItem {
 
-    private String type;
-    private String title;
-    private String author;
+    private final String type;
+    private final String title;
+    private final String author;
 
     public LibraryItem(String type,String title, String author) {
         this.type = type;
@@ -20,15 +22,24 @@ public abstract class LibraryItem {
         return author;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
     public String getLibraryItemType(){return this.type;}
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        LibraryItem otherItem = (LibraryItem) obj;
+        return title.equals(otherItem.title) && author.equals(otherItem.author);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(title, author);
+    }
 
 
     public abstract void displayItemDetails();

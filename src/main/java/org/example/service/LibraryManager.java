@@ -39,11 +39,14 @@ public abstract class LibraryManager {
         System.out.println("Data loaded from JSON file successfully.");
     }
 
-    public void addItem(LibraryItem item){
-        // TODO: 12/05/2023 Check if title exists if not add else don't
-        libraryItems.add(item);
-    };
-
+    public void addItem(LibraryItem item) {
+        if (!libraryItems.contains(item)) {
+            libraryItems.add(item);
+            System.out.println("Item added successfully.");
+        } else {
+            System.out.println("Item already exists.");
+        }
+    }
 
     public void updateItem(LibraryItem updatedItem) {
         libraryItems = libraryItems.stream()
@@ -83,16 +86,9 @@ public abstract class LibraryManager {
             return 0; // No match
         }
     }
-    public void deleteItem(LibraryItem item){
-
-    };
 
     public List<LibraryItem> getLibraryItems() {
         return libraryItems;
-    }
-
-    public GsonJSONFileOperationsImpl getFileOperations() {
-        return fileOperations;
     }
 
     public void displayItems(boolean isSearching) {
@@ -109,11 +105,6 @@ public abstract class LibraryManager {
             }
     }
 
-    public void fromJson(String json) {
-        // Convert the JSON string to libraryItems list
-        libraryItems = gson.fromJson(json, new TypeToken<List<LibraryItem>>() {}.getType());
-    }
-
     public void setLibraryItemsFromJsonArray(JsonArray jsonArray) {
         libraryItems = new GsonBuilder()
                 .registerTypeAdapter(LibraryItem.class, new LibraryItemTypeAdapter())
@@ -128,10 +119,6 @@ public abstract class LibraryManager {
             jsonArray.add(jsonElement);
         }
         return jsonArray;
-    }
-
-    public void setLibraryItems(List<LibraryItem> items) {
-        libraryItems = items;
     }
 
     public void setSearchResults(List<LibraryItem> items){

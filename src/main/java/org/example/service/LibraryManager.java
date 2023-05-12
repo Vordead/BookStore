@@ -7,12 +7,11 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
 import org.example.file.GsonJSONFileOperationsImpl;
+import org.example.helper.Helpers;
 import org.example.model.LibraryItem;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public abstract class LibraryManager {
@@ -41,6 +40,7 @@ public abstract class LibraryManager {
     }
 
     public void addItem(LibraryItem item){
+        // TODO: 12/05/2023 Check if title exists if not add else don't
         libraryItems.add(item);
     };
 
@@ -60,7 +60,9 @@ public abstract class LibraryManager {
     public List<LibraryItem> searchByTitle(String title) {
         List<LibraryItem> results = libraryItems.stream()
                 .filter(item -> item.getTitle().toLowerCase().contains(title.toLowerCase()))
-                .sorted(Comparator.comparingInt(item -> calculateTitleMatchLevel(item.getTitle(), title)))
+                .sorted(Comparator.comparingInt((LibraryItem item) -> calculateTitleMatchLevel(item.getTitle(), title))
+                        .reversed() // Sort by match level in descending order
+                        .thenComparing(LibraryItem::getTitle)) // Sort alphabetically
                 .collect(Collectors.toList());
 
         if (results.isEmpty()) {
@@ -70,22 +72,17 @@ public abstract class LibraryManager {
         return results;
     }
 
-    private int calculateTitleMatchLevel(String itemTitle, String searchTitle) {
-        int matchLevel = 0;
-
-        // Check for exact match
+    private static int calculateTitleMatchLevel(String itemTitle, String searchTitle) {
         if (itemTitle.equalsIgnoreCase(searchTitle)) {
-            return matchLevel;
+            return 3; // Perfect match
+        } else if (itemTitle.toLowerCase().contains(searchTitle.toLowerCase())) {
+            return 2; // Close match
+        } else if (Helpers.countCommonWords(itemTitle, searchTitle) >= 2) {
+            return 1; // Weak match
+        } else {
+            return 0; // No match
         }
-
-        // Check for partial match
-        if (itemTitle.toLowerCase().startsWith(searchTitle.toLowerCase())) {
-            matchLevel++;
-        }
-
-        return matchLevel;
     }
-
     public void deleteItem(LibraryItem item){
 
     };
@@ -140,7 +137,4 @@ public abstract class LibraryManager {
     public void setSearchResults(List<LibraryItem> items){
         this.searchResults = items;
     }
-
-
-    // Other methods and functionality
 }

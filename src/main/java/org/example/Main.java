@@ -5,6 +5,7 @@ import org.example.model.Book;
 import org.example.model.LibraryItem;
 import org.example.model.Magazine;
 import org.example.model.Map;
+import org.example.mongodb.MongoDBImporter;
 import org.example.service.LibraryManager;
 
 import java.io.IOException;
@@ -12,6 +13,10 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Main {
+    static String connectionString  = "mongodb://localhost:27017";
+    static String databaseName = "test";
+    static String collectionName = "inventory";
+    static String jsonFilePath = "src/main/java/org/example/data.json";
     static boolean isJsonSelected = false;
     static LibraryManager libraryManager = createLibraryManager();
     public static void main(String[] args) {
@@ -35,11 +40,11 @@ public class Main {
             }
         } else if (choice == 2) {
             System.out.println("Connecting to MongoDB, please wait...");
+            isJsonSelected = false;
+            MongoDBImporter.importOrPostJSON("import",connectionString,databaseName,collectionName,jsonFilePath);
         } else {
             System.out.println("Please Enter a valid input! Exiting...");
         }
-
-        // TODO: Implement the rest of the menu and user interactions
     }
 
     private static LibraryManager createLibraryManager() {
@@ -83,7 +88,6 @@ public class Main {
                     libraryManager.updateItem(userItemInput(true));
                     break;
                 case 5:
-                    // TODO: Implement logic to search for an item
                     searchInput();
                     break;
                 default:
@@ -97,7 +101,8 @@ public class Main {
             libraryManager.writeDataToJsonFile("src/main/java/org/example/data.json");
         }
         else{
-
+            // TODO: 12/05/2023 Add MongoDB support
+//            MongoDBImporter.importOrPostJSON();
         }
     }
 

@@ -39,9 +39,16 @@ public class Main {
                 System.out.println("Failed to load data from the JSON file: " + e.getMessage());
             }
         } else if (choice == 2) {
-            System.out.println("Connecting to MongoDB, please wait...");
-            isJsonSelected = false;
-            MongoDBImporter.importOrPostJSON("import",connectionString,databaseName,collectionName,jsonFilePath);
+            try {
+                System.out.println("Connecting to MongoDB, please wait...");
+                isJsonSelected = false;
+                MongoDBImporter.importOrPostJSON("read",connectionString,databaseName,collectionName,jsonFilePath);
+                System.out.println(MongoDBImporter.jsonArray);
+                libraryManager.setLibraryItemsFromJsonArray(MongoDBImporter.jsonArray);
+                runMenu(libraryManager,MongoDBImporter.jsonArray,scanner);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         } else {
             System.out.println("Please Enter a valid input! Exiting...");
         }
@@ -101,8 +108,7 @@ public class Main {
             libraryManager.writeDataToJsonFile("src/main/java/org/example/data.json");
         }
         else{
-            // TODO: 12/05/2023 Add MongoDB support
-//            MongoDBImporter.importOrPostJSON();
+            MongoDBImporter.importOrPostJSON("import",connectionString,databaseName,collectionName,jsonFilePath);
         }
     }
 

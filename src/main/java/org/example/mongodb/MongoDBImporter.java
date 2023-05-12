@@ -1,12 +1,9 @@
 package org.example.mongodb;
 
-import com.google.gson.Gson;
+import com.google.gson.*;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.*;
 import org.bson.Document;
 
 import java.io.IOException;
@@ -15,7 +12,11 @@ import java.nio.file.Paths;
 import java.util.List;
 
 public class MongoDBImporter {
+
+     public static JsonArray jsonArray = new JsonArray();
+
     public static void importOrPostJSON(String action, String connectionString, String databaseName, String collectionName, String jsonFilePath) {
+
         // Create a MongoClient
         MongoClientSettings settings = MongoClientSettings.builder()
                 .applyConnectionString(new ConnectionString(connectionString))
@@ -31,9 +32,9 @@ public class MongoDBImporter {
             if ("import".equalsIgnoreCase(action)) {
                 importJSON(collection, jsonFilePath);
                 System.out.println("JSON file imported successfully.");
-            } else if ("post".equalsIgnoreCase(action)) {
-                postJSON(collection, jsonFilePath);
-                System.out.println("JSON document posted successfully.");
+            } else if ("read".equalsIgnoreCase(action)) {
+                jsonArray = readJSONArrayFromMongoDB(collection);
+                System.out.println("JSON document read successfully.");
             } else {
                 System.out.println("Invalid action. Supported actions are 'import' or 'post'.");
             }
@@ -64,6 +65,27 @@ public class MongoDBImporter {
         // Insert the BSON document into the collection
         collection.insertOne(document);
     }
+
+    public static JsonArray readJSONArrayFromMongoDB(MongoCollection<Document> collection) {
+        JsonArray jsonArray = new JsonArray();
+        Gson gson = new GsonBuilder().serializeNulls().create();
+
+        // Retrieve all documents from the collection
+        FindIterable<Document> iterable = collection.find();
+        boolean isFirst = true; // Flag to track the first JSON object
+        for (Document document : iterable) {
+            if (isFirst) {
+                isFirst = false;
+                continue; // Skip the first JSON object
+            }
+            JsonObject jsonObject = gson.fromJson(document.toJson(), JsonObject.class);
+            jsonObject.remove("_id");  // Remove the "_id" field
+            jsonArray.add(jsonObject);
+        }
+
+        return jsonArray;
+    }
+
 
     public static void main(String[] args) {
         String action = "import";  // Specify the action: import or post

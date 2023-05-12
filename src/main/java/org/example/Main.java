@@ -32,7 +32,7 @@ public class Main {
         if (choice == 1) {
             try {
                 isJsonSelected = true;
-                JsonArray libraryItems = libraryManager.loadDataFromJsonFile("src/main/java/org/example/data.json");
+                JsonArray libraryItems = libraryManager.loadDataFromJsonFile(jsonFilePath);
                 libraryManager.setLibraryItemsFromJsonArray(libraryItems);
                 runMenu(libraryManager, scanner);
             } catch (IOException e) {

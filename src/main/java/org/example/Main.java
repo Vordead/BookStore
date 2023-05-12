@@ -34,7 +34,7 @@ public class Main {
                 isJsonSelected = true;
                 JsonArray libraryItems = libraryManager.loadDataFromJsonFile("src/main/java/org/example/data.json");
                 libraryManager.setLibraryItemsFromJsonArray(libraryItems);
-                runMenu(libraryManager, libraryItems, scanner);
+                runMenu(libraryManager, scanner);
             } catch (IOException e) {
                 System.out.println("Failed to load data from the JSON file: " + e.getMessage());
             }
@@ -43,9 +43,9 @@ public class Main {
                 System.out.println("Connecting to MongoDB, please wait...");
                 isJsonSelected = false;
                 MongoDBImporter.importOrPostJSON("read",connectionString,databaseName,collectionName,libraryManager.convertLibraryItemsToJsonArray());
-                System.out.println(MongoDBImporter.jsonArray);
-                libraryManager.setLibraryItemsFromJsonArray(MongoDBImporter.jsonArray);
-                runMenu(libraryManager,MongoDBImporter.jsonArray,scanner);
+                System.out.println(MongoDBImporter.getJsonArray());
+                libraryManager.setLibraryItemsFromJsonArray(MongoDBImporter.getJsonArray());
+                runMenu(libraryManager, scanner);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -58,7 +58,7 @@ public class Main {
         return new LibraryManager(){};
     }
 
-    private static void runMenu(LibraryManager libraryManager, JsonArray libraryItems, Scanner scanner) throws IOException {
+    private static void runMenu(LibraryManager libraryManager, Scanner scanner) throws IOException {
         System.out.println("\nMenu Options:");
         System.out.println("1. Display Items");
         System.out.println("2. Add Item");
@@ -105,7 +105,7 @@ public class Main {
 
     private static void saveChanges(LibraryManager libraryManager) throws IOException {
         if(isJsonSelected) {
-            libraryManager.writeDataToJsonFile("src/main/java/org/example/data.json");
+            libraryManager.writeDataToJsonFile(jsonFilePath);
         }
         else{
             MongoDBImporter.importOrPostJSON("import",connectionString,databaseName,collectionName,libraryManager.convertLibraryItemsToJsonArray());
